@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>حساب سعر منتجات SHEIN</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; padding: 20px; direction: rtl; }
+        .container { background: white; padding: 20px; border-radius: 8px; max-width: 500px; margin: auto; box-shadow: 0 0 10px #ccc; }
+        h2 { text-align: center; }
+        label, select, input, button { display: block; width: 100%; margin: 10px 0; font-size: 16px; }
+        .result { background: #e0ffe0; padding: 10px; margin-top: 20px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>حاسبة سعر منتجات SHEIN</h2>
+        <label for="price">السعر الأصلي بالدولار ($):</label>
+        <input type="number" id="price" placeholder="مثال: 14.16">
+
+        <label for="type">نوع القطعة:</label>
+        <select id="type">
+            <option value="0.5">فستان نسائي (0.5 كجم)</option>
+            <option value="0.4">تيشيرت نسائي (0.4 كجم)</option>
+            <option value="0.6">بنطلون نسائي (0.6 كجم)</option>
+            <option value="0.45">تنورة (0.45 كجم)</option>
+            <option value="0.7">عباية (0.7 كجم)</option>
+            <option value="0.5">قميص نسائي (0.5 كجم)</option>
+            <option value="0.8">جاكيت خفيف (0.8 كجم)</option>
+            <option value="1.2">جاكيت شتوي (1.2 كجم)</option>
+        </select>
+
+        <button onclick="calculate()">احسب السعر</button>
+
+        <div class="result" id="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        function roundUp(value) {
+            return Math.ceil(value);
+        }
+
+        function calculate() {
+            const priceInput = parseFloat(document.getElementById("price").value);
+            const weight = parseFloat(document.getElementById("type").value);
+
+            if (isNaN(priceInput) || priceInput <= 0) {
+                alert("الرجاء إدخال سعر صحيح");
+                return;
+            }
+
+            const priceRounded = roundUp(priceInput);
+            const priceLYD = priceRounded * 8;
+
+            const shippingUSD = roundUp(weight * 6.75);
+            const shippingLYD = shippingUSD * 8;
+
+            const totalCost = priceLYD + shippingLYD;
+            const profitAdded = totalCost * 1.25;
+            const finalPrice = Math.round(profitAdded / 5) * 5;
+
+            document.getElementById("result").innerHTML = `
+                <strong>النتائج:</strong><br>
+                • السعر بعد التقريب: ${priceRounded}$ = ${priceLYD} د.ل<br>
+                • الشحن: ${shippingUSD}$ = ${shippingLYD} د.ل<br>
+                • التكلفة الإجمالية: ${totalCost} د.ل<br>
+                • بعد إضافة الربح (25%): ${Math.round(profitAdded)} د.ل<br>
+                • <strong>السعر النهائي للزبون: ${finalPrice} دينار</strong>
+            `;
+            document.getElementById("result").style.display = "block";
+        }
+    </script>
+</body>
+</html>
